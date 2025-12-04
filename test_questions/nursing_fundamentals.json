@@ -1,0 +1,302 @@
+[
+  {
+    "question": "What is the definition of 'scope of practice' in nursing?",
+    "answer": "Scope of practice refers to services a trained health professional is deemed competent to perform and permitted to undertake according to the terms of their professional nursing license. It provides a legal framework for activities that practical nurses and registered nurses can perform.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "Who is considered the founder of modern nursing, and what was her contribution to evidence-based practice?",
+    "answer": "Florence Nightingale is considered the founder of modern nursing. She established the first nursing school in 1860 and used statistical analysis during the Crimean War to demonstrate that improved sanitation and nutrition significantly reduced soldier mortality rates, serving as an early foundation for evidence-based practice.",
+    "category": "history",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the primary role of a State Board of Nursing?",
+    "answer": "The Board of Nursing is a licensing and regulatory body that issues nursing licenses to qualified candidates and provides discipline for nurses who do not follow standards and scope of practice established in the Nurse Practice Act.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the five steps of the nursing process (ADOPIE)?",
+    "answer": "The nursing process consists of Assessment, Diagnosis, Outcomes Identification, Planning, Implementation, and Evaluation.",
+    "category": "procedural",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the difference between a medical diagnosis and a nursing diagnosis?",
+    "answer": "Medical diagnoses focus on diseases or medical problems identified by a physician or advanced practitioner. Nursing diagnoses focus on the human response to health conditions and life processes and are made independently by RNs.",
+    "category": "clinical judgment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What constitutes a 'Never Event' in healthcare?",
+    "answer": "Never events are adverse events that are clearly identifiable, measurable, serious (resulting in death or significant disability), and preventable. Examples include surgery performed on the wrong body part or patient suicide in a healthcare setting.",
+    "category": "safety",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "How does the Joint Commission define a 'Sentinel Event'?",
+    "answer": "A sentinel event is a patient safety event that reaches a patient and results in death, permanent harm, or severe temporary harm requiring interventions to sustain life.",
+    "category": "safety",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the 'Just Culture' model regarding medical errors?",
+    "answer": "A Just Culture recognizes that individual practitioners should not be held accountable for system failings over which they have no control, while not tolerating conscious disregard of clear risks or gross misconduct. It encourages reporting errors without fear of blame unless reckless behavior was involved.",
+    "category": "concept",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the components of the ISBARR communication tool?",
+    "answer": "ISBARR stands for Introduction, Situation, Background, Assessment, Request/Recommendations, and Repeat back.",
+    "category": "communication",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the difference between subjective and objective data in a nursing assessment?",
+    "answer": "Subjective data is information obtained from the client or family (what the patient says), offering their perspective. Objective data is information observed by the nurse through inspection, auscultation, and palpation (what the nurse sees/measures), or diagnostic test results.",
+    "category": "assessment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What percentage of communication is estimated to be nonverbal?",
+    "answer": "It is estimated that up to 80% of communication is nonverbal, which includes facial expressions, tone of voice, pace of conversation, and body language.",
+    "category": "communication",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is cultural humility?",
+    "answer": "Cultural humility is a humble and respectful attitude toward individuals of other cultures that pushes one to challenge their own cultural biases, realize they cannot know everything about other cultures, and approach learning about other cultures as a lifelong goal.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the six categories assessed in the Braden Scale?",
+    "answer": "The Braden Scale assesses sensory perception, moisture, activity, mobility, nutrition, and friction/shear to determine a patient's risk for pressure injuries.",
+    "category": "assessment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "Describe a Stage 1 pressure injury.",
+    "answer": "A Stage 1 pressure injury presents as intact skin with a localized area of nonblanchable erythema (redness that does not turn white when pressed), typically over a bony prominence.",
+    "category": "clinical judgment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the difference between dehiscence and evisceration?",
+    "answer": "Dehiscence is the separation of the edges of a surgical wound. Evisceration is a severe complication where an abdominal surgical incision separates and abdominal organs protrude out of the incision.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the early signs of hypoxia?",
+    "answer": "Early signs of hypoxia include anxiety, confusion, and restlessness. As it worsens, vital signs may show increased respiratory rate and heart rate.",
+    "category": "assessment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the normal range for oxygen saturation (SpO2) in an adult without chronic respiratory disease?",
+    "answer": "The target range for SpO2 for a healthy adult is 94-98%.",
+    "category": "assessment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the three categories of transmission-based precautions?",
+    "answer": "The three categories are contact precautions, droplet precautions, and airborne precautions.",
+    "category": "infection control",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "When caring for a patient with C. difficile, what specific hand hygiene practice is required?",
+    "answer": "When caring for a patient with C. difficile, hands must be washed with soap and water; alcohol-based hand sanitizers are not effective against C. difficile spores.",
+    "category": "procedural",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the chain of infection?",
+    "answer": "The chain of infection includes the infectious agent, reservoir, portal of exit, mode of transmission, portal of entry, and susceptible host.",
+    "category": "concept",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the difference between acute and chronic pain?",
+    "answer": "Acute pain has a limited duration, is associated with a specific cause, and usually causes a physiological response (like increased pulse). Chronic pain is ongoing, persistent for longer than six months, and may not cause a change in vital signs.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What does the mnemonic PQRSTU stand for in pain assessment?",
+    "answer": "PQRSTU stands for Provocative/Palliative, Quality/Quantity, Region/Radiation, Severity, Timing/Treatment, and Understanding.",
+    "category": "assessment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the 'Rule of Double Effect' regarding end-of-life pain management?",
+    "answer": "The Rule of Double Effect states that if the intent is good (relief of pain and suffering), the act is morally justifiable even if it causes an unintended result of hastening death.",
+    "category": "ethics",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the five stages of grief defined by Kubler-Ross?",
+    "answer": "The five stages are denial, anger, bargaining, depression, and acceptance.",
+    "category": "psychosocial",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is orthostatic hypotension?",
+    "answer": "Orthostatic hypotension is a drop in systolic blood pressure of 20 mm Hg or more or a drop in diastolic blood pressure of 10 mm Hg or more within three minutes of sitting or standing.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the purpose of a 'time-out' before surgery?",
+    "answer": "A 'time-out' is a safety check performed by the perioperative team prior to surgery to verify the correct patient, correct procedure, and correct site to prevent mistakes.",
+    "category": "procedural",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the normal range for serum potassium levels?",
+    "answer": "Potassium levels normally range from 3.5 to 5.1 mEq/L.",
+    "category": "lab values",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the signs of fluid volume deficit (hypovolemia)?",
+    "answer": "Signs include hypotension, tachycardia, weak/thready pulse, dry mucous membranes, poor skin turgor (tenting), concentrated urine, and decreased urine output.",
+    "category": "assessment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is Chvostek’s sign and what does it indicate?",
+    "answer": "Chvostek’s sign is an involuntary twitching of facial muscles when the facial nerve is tapped. It is a classic sign of acute hypocalcemia.",
+    "category": "assessment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is an isotonic IV solution?",
+    "answer": "An isotonic solution has a similar concentration of dissolved particles as blood (e.g., 0.9% Normal Saline). It stays in the intravascular space and does not cause fluid movement between compartments via osmosis.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the difference between enteral and parenteral nutrition?",
+    "answer": "Enteral nutrition is administered directly to the gastrointestinal tract (e.g., via NG tube), bypassing chewing/swallowing. Parenteral nutrition is delivered through an intravenous line (usually central) for clients who cannot use their GI tract.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the definition of oliguria?",
+    "answer": "Oliguria is decreased urine output, defined as less than 500 mL of urine in 24 hours in adults, or less than 0.5 mL/kg/hour in hospitalized adults.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is a 'Never Event' related to pressure injuries?",
+    "answer": "Hospital-acquired or worsening pressure injuries (Stage 3 or 4) during hospitalization are considered never events.",
+    "category": "safety",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What causes stress urinary incontinence?",
+    "answer": "Stress urinary incontinence is the involuntary loss of urine with intra-abdominal pressure (like coughing or laughing) caused by weak pelvic floor muscles.",
+    "category": "pathophysiology",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is paralytic ileus?",
+    "answer": "Paralytic ileus is a condition where peristalsis is not propelling contents through the intestines, often occurring after abdominal surgery or anesthesia.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the normal range for urine specific gravity?",
+    "answer": "Normal urine specific gravity levels are between 1.010 and 1.020.",
+    "category": "lab values",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the symptoms of a deep vein thrombosis (DVT)?",
+    "answer": "Symptoms of DVT include swelling, redness, warmth, and pain in the affected extremity (usually the leg).",
+    "category": "assessment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the tripod position and why do patients use it?",
+    "answer": "The tripod position involves sitting up and leaning forward with arms on knees or a table. Patients use it to enhance lung expansion and air exchange when experiencing respiratory distress.",
+    "category": "clinical judgment",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the difference between delirium and dementia?",
+    "answer": "Delirium is an acute, sudden state of cognitive impairment (often reversible) caused by a physiological trigger. Dementia is a chronic, gradual, progressive, and irreversible decline in cognition.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is 'sundowning' in patients with dementia?",
+    "answer": "Sundowning is restlessness, agitation, irritability, or confusion that typically begins or worsens as daylight fades and can continue into the night.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the normal range for blood pH?",
+    "answer": "The normal range for blood pH is 7.35 to 7.45.",
+    "category": "lab values",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is respiratory acidosis and what typically causes it?",
+    "answer": "Respiratory acidosis is a condition where pH is <7.35 and PaCO2 is >45. It is typically caused by hypoventilation or conditions that decrease gas exchange (like COPD, asthma, or opioid overdose) leading to CO2 retention.",
+    "category": "pathophysiology",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the purpose of an incentive spirometer?",
+    "answer": "An incentive spirometer is used to expand the lungs, keep alveoli open, reduce fluid buildup, and prevent pneumonia, especially after surgery.",
+    "category": "procedural",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What constitutes a clear liquid diet?",
+    "answer": "A clear liquid diet consists of fluids or solids that are liquid at room temperature and contain no residue, such as water, apple juice, clear soda, Jello, popsicles, and broth.",
+    "category": "nutrition",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the 'RACE' acronym used for in fire safety?",
+    "answer": "RACE stands for Rescue, Activate, Confine, and Extinguish (or Evacuate).",
+    "category": "safety",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is a sentinel event?",
+    "answer": "A sentinel event is a patient safety event (not primarily related to the natural course of the patient's illness) that reaches a patient and results in death, permanent harm, or severe temporary harm.",
+    "category": "safety",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the difference between a Living Will and a Health Care Power of Attorney?",
+    "answer": "A Living Will is a legal document describing a client's wishes for end-of-life care if they cannot speak for themselves. A Health Care Power of Attorney designates a specific person to make medical decisions on the client's behalf if they are incapacitated.",
+    "category": "legal",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What are the 'Five Rights' of delegation?",
+    "answer": "While not explicitly listed as a bulleted list of five in the snippet, the text mentions considering the 'circumstance, person, task, communication, supervision, and evaluation.' (Standard nursing knowledge aligns this with Right Task, Right Circumstance, Right Person, Right Direction/Communication, Right Supervision/Evaluation).",
+    "category": "concept",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is the purpose of a Safety Data Sheet (SDS)?",
+    "answer": "An SDS provides workers with information about chemicals encountered in the workplace, including hazards, first aid measures, and handling/storage recommendations.",
+    "category": "safety",
+    "source": "nursing_fundamentals.pdf"
+  },
+  {
+    "question": "What is presbycusis?",
+    "answer": "Presbycusis is age-related hearing loss.",
+    "category": "definition",
+    "source": "nursing_fundamentals.pdf"
+  }
+]

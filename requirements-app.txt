@@ -1,0 +1,16 @@
+streamlit==1.52.0
+python-dotenv
+pinecone
+langchain-pinecone==0.2.13
+pinecone==7.3.0
+pinecone-plugin-assistant==1.8.0
+pinecone-plugin-interface==0.0.7
+PyYAML==6.0.3
+langchain==1.1.0
+langchain-openai==1.1.0
+langchain-pinecone==0.2.13
+langgraph==1.0.4
+langgraph-checkpoint==3.0.1
+python-dotenv==1.2.1
+pydantic==2.12.4
+

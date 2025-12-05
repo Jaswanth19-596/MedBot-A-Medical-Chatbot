@@ -7,10 +7,10 @@ from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.config import get_stream_writer
 from dotenv import load_dotenv
-import logging
-from datetime import datetime
 from pydantic import BaseModel
 from typing import Literal
+from langchain.agents.middleware import SummarizationMiddleware
+import logging
 from src.helpers import load_config
 
 # ============= CONFIGURATION =============
@@ -157,7 +157,14 @@ def get_agent():
         model=ChatOpenAI(model=model),
         tools=[retrieve_context],
         system_prompt=system_prompt,
-        checkpointer=checkpointer
+        checkpointer=checkpointer,
+        middleware=[
+            SummarizationMiddleware(
+                model = ChatOpenAI(model = model),
+                trigger = ("messages", 10),
+                keep = ("messages", 3)
+            )
+        ]
     )
     return agent
 

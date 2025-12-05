@@ -4,6 +4,9 @@ from datetime import datetime
 from src.agent import get_agent
 from rate_limit import RateLimit
 import uuid
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ============================================
 # LOGGING SETUP
@@ -26,9 +29,6 @@ logger.info("=" * 50)
 # ============================================
 # HELPER FUNCTIONS
 # ============================================
-
-
-
 def get_user_ip():
     try:
         ip = st.context.ip_address

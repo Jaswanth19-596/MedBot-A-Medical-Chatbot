@@ -1,7 +1,12 @@
 import sqlite3
 import time
 from contextlib import contextmanager
+from src.helpers import load_config
 
+config = load_config()
+
+max_requests = config['rate_limiting']['max_requests']
+time_window = config['rate_limiting']['time_window']
 class RateLimit:
 
     def __init__(self, db_path = 'rate_limits.db'):
@@ -35,7 +40,7 @@ class RateLimit:
         finally:
             conn.close()
     
-    def is_allowed(self, ip_address, max_requests=5, time_window=1800):
+    def is_allowed(self, ip_address, max_requests=max_requests, time_window=time_window):
         """Check if request is allowed"""
         current_time = time.time()
         cutoff_time = current_time - time_window

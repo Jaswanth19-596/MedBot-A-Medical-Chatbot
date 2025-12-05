@@ -24,12 +24,13 @@ dimensions = config['embeddings']['dimensions']
 index_name = config['index_name']
 search_type = config['retrieval']['search_type']
 k = config['retrieval']['k']
+log_file_name = config['logging']['file']
 
 # Logger Setup
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-handler = logging.FileHandler('app.log')
+handler = logging.FileHandler(log_file_name)
 handler.setLevel(logging.INFO)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -102,6 +103,7 @@ def retrieve_context(query: str):
         # This writer is useful to give updates to the user 
         writer = get_stream_writer()
 
+        writer(f'Rewriting the query for better searching...')
         rewritten_query = rewrite_query(query)
         
         # Retreiving the relevant documents from the vector store.
@@ -134,10 +136,11 @@ def retrieve_context(query: str):
         return f"Error while retrieving documents: {str(e)}", []
 
 
+
 # ============= AGENT SETUP =============
 def get_agent():
     """Creates and returns the LangGraph agent."""
-    system_prompt = """You are an expert Medical Chatbot assistant. Your role is to:
+    system_prompt = """You are an expert Medical Chatbot assistant. Your name is MedBot. Your role is to:
 
     1. Help users with medical questions using the medical database available to you.
     2. Use the retrieve_context tool to search the medical book for relevant information.
@@ -147,15 +150,15 @@ def get_agent():
     6. Be empathetic and clear in your explanations.
 
     Important: This is NOT a replacement for professional medical advice. Always recommend consulting a healthcare provider for diagnosis or treatment decisions."""
+    checkpointer = InMemorySaver()
+
 
     agent = create_agent(
         model=ChatOpenAI(model=model),
         tools=[retrieve_context],
         system_prompt=system_prompt,
-        checkpointer=InMemorySaver()
+        checkpointer=checkpointer
     )
     return agent
 
-def get_thread_id():
-    """Generates a unique thread ID for the chat session."""
-    return f"user_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+

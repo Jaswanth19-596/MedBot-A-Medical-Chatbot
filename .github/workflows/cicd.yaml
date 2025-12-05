@@ -1,0 +1,67 @@
+name: Push the code to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-app.txt
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag and push image to Amazon ECR
+        id: build-image
+        run: |
+          docker build -t medbot/app .
+          docker tag medbot/app:latest 740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest
+          docker push 740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest
+
+      - name: SSH into EC2 instance and run commands
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{secrets.EC2_SSH_KEY}}
+          env:
+            PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+            LANGCHAIN_TRACING_V2: ${{ secrets.LANGCHAIN_TRACING_V2 }}
+            LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          script: |
+            docker pull 740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest
+            docker stop medbot_app || true
+            docker rm medbot_app || true
+
+            docker run -d \
+                --name medbot_app \
+                -e PINECONE_API_KEY="${PINECONE_API_KEY}" \
+                -e OPENAI_API_KEY="${OPENAI_API_KEY}" \
+                -e LANGCHAIN_TRACING_V2="${LANGCHAIN_TRACING_V2}" \
+                -e LANGCHAIN_API_KEY="${LANGCHAIN_API_KEY}" \
+                -p 9999:8501 \
+                740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest

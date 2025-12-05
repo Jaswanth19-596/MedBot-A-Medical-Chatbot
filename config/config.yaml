@@ -1,0 +1,21 @@
+model:
+  name: 'gpt-4o-mini'
+  temperature: 0.2
+  max_tokens: 1000
+
+embeddings:
+  name: 'text-embedding-3-small'
+  dimensions: 700
+
+chunk:
+  chunk_size: 800
+  chunk_overlap: 40
+
+retrieval:
+  search_type: 'similarity'
+  k: 3
+
+paths:
+  data_path: './data'
+
+index_name: 'medbot'

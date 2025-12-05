@@ -4,6 +4,30 @@ MedBot is a conversational AI project that acts as a helpful medical assistant. 
 
 **Disclaimer:** This chatbot is for informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
 
+## Evaluation Results
+
+The performance of the RAG pipeline has been evaluated using the Ragas framework. Here are the summary statistics:
+
+```
+============================================================
+SUMMARY STATISTICS
+============================================================
+context_recall      : 0.869 (86.9%)
+context_precision   : 0.877 (87.7%)
+answer_relevancy    : 0.900 (90.0%)
+faithfulness        : 0.895 (89.5%)
+```
+
+### Metric Explanations
+
+-   **Context Recall (86.9%):** This measures how well the retriever finds all the necessary information from the knowledge base to answer the question. Our score of 86.9% indicates that the system is highly effective at finding the relevant context.
+
+-   **Context Precision (87.7%):** This measures how much of the retrieved information is actually relevant to the question. At 87.7%, our system provides context that is highly focused and contains minimal irrelevant information.
+
+-   **Answer Relevancy (90.0%):** This measures how relevant the generated answer is to the user's question. A score of 90.0% shows that the chatbot's answers are consistently on-topic and directly address the user's query.
+
+-   **Faithfulness (89.5%):** This measures how factually accurate the generated answer is based on the provided context. A high faithfulness score of 89.5% means the chatbot is not making up information (hallucinating) and is sticking to the facts from the retrieved documents.
+
 ## Features
 
 - **Conversational AI:** Engage in natural conversations about medical topics.

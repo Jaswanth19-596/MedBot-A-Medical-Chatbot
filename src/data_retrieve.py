@@ -2,12 +2,17 @@ from src.agent import get_agent, get_thread_id, logger
 
 def main():
     """Main function to run the command-line chatbot interface."""
+
+    # Get the agent loaded with the System Prompt
     agent = get_agent()
+
+    # Get the current Thread id
     thread_id = get_thread_id()
     config = {"configurable": {"thread_id": thread_id}}
 
     print("Medical Chatbot Ready. Type 'exit' to quit.\n")
 
+    # Run the chatbot.
     while True:
         try:
             print('\n')

@@ -11,9 +11,19 @@ import logging
 from datetime import datetime
 from pydantic import BaseModel
 from typing import Literal
+from src.helpers import load_config
 
 # ============= CONFIGURATION =============
 load_dotenv()
+config = load_config()
+
+model = config['model']['name']
+temperature = config['model']['temperature']
+embedding_model = config['embeddings']['name']
+dimensions = config['embeddings']['dimensions']
+index_name = config['index_name']
+search_type = config['retrieval']['search_type']
+k = config['retrieval']['k']
 
 # Logger Setup
 logger = logging.getLogger(__name__)
@@ -30,11 +40,11 @@ logger.addHandler(handler)
 
 def get_retriever():
     """Initializes and returns the vector store retriever."""
-    embedding_model = OpenAIEmbeddings(model='text-embedding-3-small', dimensions=700)
+    embedding_model = OpenAIEmbeddings(model=embedding_model, dimensions=dimensions)
     pc = Pinecone()
-    index = pc.Index("medbot")
+    index = pc.Index(index_name)
     vector_store = PineconeVectorStore(index=index, embedding=embedding_model)
-    return vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 3})
+    return vector_store.as_retriever(search_type= search_type, search_kwargs={"k": k})
 
 retriever = get_retriever()
 
@@ -44,7 +54,7 @@ class RelevanceOutput(BaseModel):
 
 def validate_relevance(query: str, docs: list) -> list:
     """Filter docs by relevance score"""
-    relevance_checker_model = ChatOpenAI(model="gpt-4o-mini", temperature=0).with_structured_output(RelevanceOutput)
+    relevance_checker_model = ChatOpenAI(model= model, temperature=temperature).with_structured_output(RelevanceOutput)
     
     filtered_docs = []
     for doc in docs:
@@ -59,34 +69,62 @@ def validate_relevance(query: str, docs: list) -> list:
     
     return filtered_docs
 
-@tool
-def retrieve_context(query: str):
-    """Retrieve information to help answer a query"""
+
+def rewrite_query(query: str) -> str:
+    """The Main goal of this function is to rewrite the user's query to make it more searchable"""
     try:
-        writer = get_stream_writer()
-        rewriter = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
+        
+        # Rewriting the user's query using LLM.
+        rewriter = ChatOpenAI(model=model, temperature=temperature)
+
+        # Prompt 
         rewrite_query = f"""Rewrite this medical question to be more specific and searchable.
             Keep it short (1-2) sentences.
             Original : {query}
             Rewritten : 
         """
+
+        # Executing the LLM.
         rewritten = rewriter.invoke(rewrite_query).content
-        writer(f'Searching for: {rewritten}')
+
+        return rewritten
+
+    except Exception as e:
+        logger.error("Error while Rewritting the Query", str(e))
+        raise Exception
+
+
+
+@tool
+def retrieve_context(query: str):
+    """Retrieve information to help answer a query"""
+    try:
+        # This writer is useful to give updates to the user 
+        writer = get_stream_writer()
+
+        rewritten_query = rewrite_query(query)
         
-        retrieved_docs = retriever.invoke(rewritten)
+        # Retreiving the relevant documents from the vector store.
+        retrieved_docs = retriever.invoke(rewritten_query)
+
+        # If there are no relevant docs, just return empty
         if not retrieved_docs:
             writer('No relevant documents found.')
-            logger.warning(f"No docs found for query: {rewritten}")
+            logger.warning(f"No docs found for query: {rewritten_query}")
             return "No relevant information found.", []
-
         writer(f'Found {len(retrieved_docs)} sources. Checking for relevance...')
+
+        # Validate the relevancy of the retrieved documents.
         filtered_docs = validate_relevance(query, retrieved_docs)
 
+        # If none of them are relevant, return empty
         if not filtered_docs:
             writer('No relevant documents found after filtering.')
             return "No relevant information found.", []
 
         writer(f'Found {len(filtered_docs)} relevant sources.')
+
+        # Join all the documents and return
         serialized = "\n\n".join((f"Source: {doc.metadata['book_name']} (Page: {doc.metadata['page']})\nContent: {doc.page_content}") for doc in filtered_docs)
         return serialized, filtered_docs
     
@@ -111,7 +149,7 @@ def get_agent():
     Important: This is NOT a replacement for professional medical advice. Always recommend consulting a healthcare provider for diagnosis or treatment decisions."""
 
     agent = create_agent(
-        model=ChatOpenAI(model="gpt-4o-mini"),
+        model=ChatOpenAI(model=model),
         tools=[retrieve_context],
         system_prompt=system_prompt,
         checkpointer=InMemorySaver()

@@ -150,6 +150,28 @@ This project relies on several key Python libraries:
 
 For a full list of dependencies, please see the `requirements.txt` file.
 
+## Visualizations
+
+Here are some visualizations of the evaluation metrics:
+
+### Metrics Overview
+![Metrics Overview](outputs/figures/metrics_overview.png)
+
+### Performance Radar
+![Performance Radar](outputs/figures/performance_radar.png)
+
+### Score Distributions
+![Score Distributions](outputs/figures/score_distributions.png)
+
+### Metrics Correlation
+![Metrics Correlation](outputs/figures/metrics_correlation.png)
+
+### Metrics Distribution
+![Metrics Distribution](outputs/figures/metrics_distribution.png)
+
+### Performance Extremes
+![Performance Extremes](outputs/figures/performance_extremes.png)
+
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.

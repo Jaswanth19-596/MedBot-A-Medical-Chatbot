@@ -19,7 +19,7 @@ config = load_config()
 
 model = config['model']['name']
 temperature = config['model']['temperature']
-embedding_model = config['embeddings']['name']
+embedding_model_name = config['embeddings']['name']
 dimensions = config['embeddings']['dimensions']
 index_name = config['index_name']
 search_type = config['retrieval']['search_type']
@@ -40,7 +40,7 @@ logger.addHandler(handler)
 
 def get_retriever():
     """Initializes and returns the vector store retriever."""
-    embedding_model = OpenAIEmbeddings(model=embedding_model, dimensions=dimensions)
+    embedding_model = OpenAIEmbeddings(model=embedding_model_name, dimensions=dimensions)
     pc = Pinecone()
     index = pc.Index(index_name)
     vector_store = PineconeVectorStore(index=index, embedding=embedding_model)

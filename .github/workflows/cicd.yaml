@@ -47,21 +47,18 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{secrets.EC2_SSH_KEY}}
-          env:
-            PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
-            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-            LANGCHAIN_TRACING_V2: ${{ secrets.LANGCHAIN_TRACING_V2 }}
-            LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+
           script: |
+            aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 740186513331.dkr.ecr.us-east-2.amazonaws.com
             docker pull 740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest
             docker stop medbot_app || true
             docker rm medbot_app || true
 
             docker run -d \
                 --name medbot_app \
-                -e PINECONE_API_KEY="${PINECONE_API_KEY}" \
-                -e OPENAI_API_KEY="${OPENAI_API_KEY}" \
-                -e LANGCHAIN_TRACING_V2="${LANGCHAIN_TRACING_V2}" \
-                -e LANGCHAIN_API_KEY="${LANGCHAIN_API_KEY}" \
+                -e PINECONE_API_KEY=${{ secrets.PINECONE_API_KEY }} \
+                -e OPENAI_API_KEY= ${{ secrets.OPENAI_API_KEY }} \
+                -e LANGCHAIN_TRACING_V2=${{ secrets.LANGCHAIN_TRACING_V2 }} \
+                -e LANGCHAIN_API_KEY=${{ secrets.LANGCHAIN_API_KEY }} \
                 -p 9999:8501 \
                 740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest

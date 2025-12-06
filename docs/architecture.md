@@ -6,13 +6,14 @@
 3. [Data Flow](#3-data-flow)
 4. [Technology Stack](#4-technology-stack)
 5. [Vector Database](#5-vector-database)
-6. [RAG Pipeline](#6-rag-pipeline)
+6. [The LangGraph Agent](#6-the-langgraph-agent)
+7. [Session Management](#7-session-management)
 
 ---
 
 ## 1. System Architecture
 
-The MedBot system is designed as a modular Retrieval-Augmented Generation (RAG) pipeline. It leverages state-of-the-art NLP models and a vector database to provide accurate, context-aware answers to medical questions based on a private knowledge base.
+The MedBot system is designed around a sophisticated **LangGraph** agent that orchestrates a Retrieval-Augmented Generation (RAG) pipeline. It leverages state-of-the-art NLP models and a vector database to provide accurate, context-aware answers to medical questions.
 
 ```mermaid
 graph TD
@@ -24,14 +25,15 @@ graph TD
     end
 
     subgraph "Inference Pipeline (Online)"
-        F[User Query] --> G{Query Vectorization};
-        G --> H(Similarity Search);
-        E --> H;
-        H --> I{Top-K Chunks};
-        I --> J(Prompt Augmentation);
-        F --> J;
-        J --> K[LLM Generation];
-        K --> L[Generated Response];
+        F[User Query] --> G{Agent};
+        subgraph G
+            direction LR
+            H[Rewrite Query] --> I(Retrieve Context);
+            I --> J{Filter for Relevance};
+            J --> K(Generate Response);
+        end
+        E --> I;
+        K --> L[Streamed Response];
     end
 
     style A fill:#f9f,stroke:#333,stroke-width:2px
@@ -46,12 +48,13 @@ The architecture is composed of several key modules:
 
 | Component | Description |
 |---|---|
-| **Data Ingestion** | Loads raw medical documents (PDFs) from the specified data directory. This is the entry point for all knowledge into the system. |
-| **Data Chunking** | Splits the loaded documents into smaller, semantically coherent text chunks. This is critical for effective retrieval, as it ensures the retrieved context is focused and relevant. We use a chunk size of 1000 characters with a 200-character overlap to maintain context between chunks. |
-| **Vectorization (Embedding)** | Converts each text chunk into a high-dimensional numerical vector using an embedding model (`text-embedding-3-small`). These vectors capture the semantic meaning of the text. |
-| **Vector Storage & Indexing**| Stores the vectorized chunks in a specialized vector database (Pinecone). An efficient index is built to enable rapid similarity searches. |
-| **Retrieval** | When a user submits a query, it is first vectorized. The system then searches the Pinecone index for the 'Top-K' document chunks whose vectors are most similar to the query vector (k=3). |
-| **Augmented Generation** | The retrieved chunks are combined with the original user query to form an augmented prompt. This prompt is fed to a powerful Large Language Model (LLM), which generates a final, human-readable response grounded in the provided context. |
+| **Data Ingestion** | Loads raw medical documents (PDFs) from the `data/` directory using `PyPDFLoader`. |
+| **Data Chunking** | Splits documents into smaller, 800-character chunks with a 40-character overlap using `RecursiveCharacterTextSplitter`. This maintains context while preparing data for retrieval. |
+| **Vectorization (Embedding)** | Converts text chunks into 700-dimensional vectors using OpenAI's `text-embedding-3-small` model. These embeddings capture the semantic meaning of the text. |
+| **Vector Storage & Indexing**| Stores the vectorized chunks in a Pinecone vector database, organized in an index named `medbot`. |
+| **The LangGraph Agent** | The core of the online pipeline. This stateful agent manages the entire process from query to response, orchestrating query rewriting, retrieval, relevance filtering, and generation. |
+| **Web Interface (Streamlit)** | A user-friendly web application (`app.py`) that handles user interaction, displays the conversation, and manages rate limiting. |
+| **Command-Line Interface (CLI)** | A terminal-based interface (`src/data_retrieve.py`) for direct interaction with the chatbot. |
 
 ## 3. Data Flow
 
@@ -59,80 +62,57 @@ The data flow is bifurcated into an offline indexing phase and an online inferen
 
 1.  **Offline Indexing**:
     *   Medical PDF documents are placed in the `/data` directory.
-    *   The `data_ingestion.py` script loads these documents.
-    *   `data_chunking.py` splits them into 1000-character chunks with a 200-character overlap.
-    *   `data_indexing.py` uses the OpenAI `text-embedding-3-small` model to create a 700-dimension vector for each chunk.
-    *   These vectors, along with their corresponding text and metadata, are uploaded and indexed in the Pinecone `medbot` index.
+    *   The `src/data_indexing.py` script is run.
+    *   `load_and_filter_documents` (from `src/data_ingestion.py`) loads the PDFs.
+    *   `split_text_into_chunks` (from `src/data_chunking.py`) splits them into chunks.
+    *   The script then uses `OpenAIEmbeddings` to create vectors for each chunk.
+    *   These vectors and their metadata are uploaded to the Pinecone `medbot` index.
 
-2.  **Online Inference**:
-    *   A user enters a query into the Streamlit web interface.
-    *   The query is sent to the backend agent.
-    *   The query is vectorized using the same embedding model.
-    *   The vector is used to perform a similarity search in Pinecone, retrieving the top 3 most relevant document chunks.
-    *   The `agent.py` module constructs a detailed prompt containing the user's question and the retrieved context.
-    *   This augmented prompt is sent to the OpenAI GPT-4o-mini API.
-    *   The model generates a response, which is streamed back to the user through the UI. The temperature is set to 0 to ensure deterministic and factual answers.
+2.  **Online Inference (Agent Execution)**:
+    *   A user enters a query via the Streamlit UI or the CLI.
+    *   The query is sent to the **LangGraph agent**.
+    *   **Node 1: Rewrite Query**: The agent first uses `gpt-4o-mini` to rewrite the user's query into a more precise and searchable format.
+    *   **Node 2: Retrieve Context**: The rewritten query is used to search the Pinecone vector store, retrieving the top 3 most relevant document chunks.
+    *   **Node 3: Filter for Relevance**: The retrieved chunks are passed to `gpt-4o-mini` to validate their relevance to the *original* query. Only relevant chunks proceed.
+    *   **Node 4: Generate Response**: The filtered, relevant chunks are combined with the original query in an augmented prompt. This is sent to `gpt-4o-mini` to generate a final, citable answer.
+    *   The agent's intermediate steps and the final answer are streamed back to the user interface in real-time.
 
 ## 4. Technology Stack
 
 | Technology | Role | Justification |
 |---|---|---|
-| **Python 3.13** | Core Programming Language | Mature ecosystem, extensive libraries for data science and AI (e.g., Pandas, NumPy), and strong community support. |
-| **LangChain** | RAG Framework | Provides robust orchestration for building complex LLM chains. Simplifies the integration of data sources, models, and retrieval mechanisms. |
-| **Pinecone** | Vector Database | A managed, high-performance vector database that scales effortlessly. It offers low-latency similarity search, which is crucial for a real-time chatbot experience. |
-| **OpenAI GPT-4o-mini** | Generation Model | Offers a strong balance of performance, cost, and reasoning capability. Its instruction-following and generation quality are ideal for this application. |
-| **OpenAI text-embedding-3-small** | Embedding Model | A highly efficient and powerful model for generating semantic embeddings. Its 700-dimension output provides a good trade-off between detail and computational cost. |
-| **RAGAS** | Evaluation Framework | A specialized framework for evaluating RAG pipelines. It provides key metrics like Faithfulness, Context Recall, and Answer Relevancy that go beyond simple accuracy. |
-| **Streamlit** | Web Interface | A pure-Python framework that makes it incredibly fast to build and deploy interactive web apps for machine learning projects. |
+| **Python 3.13.3** | Core Programming Language | Mature ecosystem, extensive libraries for data science and AI. |
+| **LangGraph** | Agent Framework | Provides the backbone for our stateful, multi-step RAG agent, allowing for complex logic like query rewriting and filtering. |
+| **LangChain** | RAG Components | Used for data loading, splitting, and integrating with models and vector stores. |
+| **Pinecone** | Vector Database | A managed, high-performance vector database for low-latency similarity search. |
+| **OpenAI GPT-4o-mini** | Generation & Reasoning | Powers query rewriting, relevance filtering, and final answer generation. |
+| **OpenAI text-embedding-3-small** | Embedding Model | Efficient and powerful model for generating semantic embeddings. |
+| **Streamlit** | Web Interface | A pure-Python framework for rapidly building interactive web apps. |
+| **RAGAS** | Evaluation Framework | Provides key metrics for assessing the performance of the RAG pipeline. |
 
 ## 5. Vector Database
 
-The vector database is at the heart of the retrieval system.
-
 *   **Provider**: Pinecone
 *   **Index Name**: `medbot`
-*   **Vector Dimensions**: 700 (from `text-embedding-3-small`)
+*   **Vector Dimensions**: 700
 *   **Metric**: Cosine Similarity
 
-### Indexing Strategy
+Each record in Pinecone contains the vector embedding and metadata, including the source document and the original text chunk, enabling traceability and citations.
 
-Each record in the Pinecone index corresponds to a single text chunk and contains:
+## 6. The LangGraph Agent
 
-1.  **Vector ID**: A unique identifier for the chunk (e.g., a UUID).
-2.  **Vector Values**: The 700-dimensional embedding of the text chunk.
-3.  **Metadata**:
-    *   `text`: The original text of the chunk.
-    *   `source_document`: The filename of the PDF from which the chunk was extracted.
-    *   `chunk_id`: The sequential index of the chunk within its source document.
+The agent is the most critical part of the system. It's a stateful graph where each node represents a step in the RAG process.
 
-This metadata is crucial for traceability and allows the system to cite sources if needed. The index is optimized for fast and accurate similarity search, forming the foundation of the RAG pipeline's retrieval step.
+*   **State**: The agent maintains a state object that includes the original query, rewritten query, retrieved documents, and relevance checks.
+*   **Nodes**: The graph consists of nodes for rewriting the query, retrieving documents, filtering for relevance, and generating the final answer.
+*   **Edges**: Conditional edges connect the nodes, allowing the graph to dynamically decide the next step. For example, if no relevant documents are found after filtering, the agent can proceed directly to a "cannot answer" response.
 
-## 6. RAG Pipeline
+This graph-based approach provides a clear, modular, and extensible way to manage the complex workflow of the RAG pipeline.
 
-The RAG (Retrieval-Augmented Generation) pipeline is what allows MedBot to answer questions based on a private knowledge base, reducing hallucinations and providing verifiable information.
+## 7. Session Management
 
-**Step 1: Retrieval**
-The process begins with a user query, which is converted into an embedding. This embedding is used to query the Pinecone vector store. The store returns the `Top-K` (k=3) chunks of text that are semantically closest to the query. This is the **"Retrieval"** part of RAG.
+In the Streamlit web application (`app.py`), user sessions are managed using `st.session_state`.
 
-**Step 2: Augmentation**
-The retrieved text chunks (context) are then fused with the original query into a carefully engineered prompt. The prompt template looks something like this:
-
-```
-"Use the following context to answer the question at the end. If you don't know the answer, just say that you don't know.
-
-Context:
----
-{retrieved_chunk_1}
----
-{retrieved_chunk_2}
----
-{retrieved_chunk_3}
----
-
-Question: {user_query}"
-```
-
-This is the **"Augmented"** part of RAG.
-
-**Step 3: Generation**
-The final, augmented prompt is sent to the GPT-4o-mini model. The LLM's task is not to answer from its own internal knowledge, but to synthesize an answer based *only* on the context provided. This grounding in source material is what ensures the answers are factual and relevant. This is the **"Generation"** part of RAG.
+*   **Chat History**: `st.session_state.messages` stores the entire conversation history for the current session, allowing the UI to re-render it on each interaction.
+*   **Thread ID**: `st.session_state.thread_id` assigns a unique UUID to each user session. This ID is passed to the LangGraph agent to maintain conversation history and context across multiple turns.
+*   **Agent Caching**: `st.session_state.agent` stores the initialized LangGraph agent. This prevents the agent from being recreated on every user interaction, which significantly improves performance.

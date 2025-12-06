@@ -16,7 +16,7 @@
 
 Before you begin, ensure you have the following:
 
-*   **Python**: Version 3.13 or higher.
+*   **Python**: Version 3.13.3.
 *   **API Keys**:
     *   **OpenAI API Key**: For accessing GPT-4o-mini and embedding models.
     *   **Pinecone API Key**: For accessing your vector database.
@@ -63,22 +63,26 @@ The application requires API keys and other configuration values to be stored in
 The chatbot's knowledge is derived from PDF documents you provide.
 
 1.  **Place your data**:
-    *   Add your medical PDF documents into the `data/` directory. The project is pre-configured with 6 medical textbooks.
+    *   Add your medical PDF documents into the `data/` directory. The project is pre-configured with several medical textbooks.
 
 2.  **Run the indexing pipeline**:
-    A shell script `template.sh` is provided to run the entire data processing pipeline. This script will:
-    *   Ingest the PDFs.
+    The `src/data_indexing.py` script handles the entire data processing pipeline. This script will:
+    *   Ingest the PDFs from the `data/` directory.
     *   Chunk the documents into smaller pieces.
     *   Create vector embeddings for each chunk.
     *   Upload the embeddings and metadata to the Pinecone `medbot` index.
 
     Execute the script from the root directory:
     ```bash
-    bash template.sh
+    python src/data_indexing.py
     ```
     This process may take some time depending on the number and size of your documents.
 
 ## 5. Running the Application
+
+You can interact with MedBot through the web interface or a command-line interface.
+
+### Web Interface
 
 The user interface is built with Streamlit.
 
@@ -95,6 +99,21 @@ The user interface is built with Streamlit.
 
 3.  **Access the web interface**:
     Open your web browser and navigate to the local URL provided by Streamlit (usually `http://localhost:8501`). You can now start asking medical questions.
+
+### Command-Line Interface
+
+For a terminal-based experience, you can use the CLI.
+
+1.  **Ensure your virtual environment is active**:
+    ```bash
+    source venv/bin/activate
+    ```
+
+2.  **Run the CLI script**:
+    ```bash
+    python src/data_retrieve.py
+    ```
+    The chatbot will be ready to answer your questions in the terminal. To exit, type `exit`.
 
 ## 6. Running Evaluations
 
@@ -118,20 +137,23 @@ We use the RAGAS framework to evaluate the performance of the RAG pipeline.
 |---|---|
 | **`ModuleNotFoundError`** | Make sure you have activated the virtual environment (`source venv/bin/activate`) and installed all dependencies (`pip install -r requirements.txt`). |
 | **API Authentication Error** | Double-check that your `.env` file is correctly formatted and that your `OPENAI_API_KEY` and `PINECONE_API_KEY` are valid and have not expired. |
-| **Pinecone Index Not Found**| Ensure you have successfully run the indexing script (`bash template.sh`) before running the main application. Verify the index name in `config/config.yaml` matches the one in your Pinecone account. |
+| **Pinecone Index Not Found**| Ensure you have successfully run the indexing script (`python src/data_indexing.py`) before running the main application. Verify the index name in `config/config.yaml` matches the one in your Pinecone account. |
 | **Slow response times** | This could be due to network latency or rate limits on the OpenAI API. If the problem persists, check the OpenAI status page. |
 | **PDF processing errors** | Ensure your PDFs are not corrupted and are text-based. Scanned image-based PDFs cannot be processed by the default data loader. |
 
 ## 8. FAQ
 
+**Q: Why is there a rate limit on the web interface?**
+**A:** The web interface includes a rate limit (e.g., 5 requests per 30 minutes) to manage API costs associated with the language model and to ensure fair usage for all users. The CLI does not have this limit.
+
 **Q: Can I use a different LLM?**
-**A:** Yes. You can change the model name in `config/config.yaml`. You will need to modify the `src/agent.py` file if the new model requires a different API structure or prompt format.
+**A:** Yes. You can change the model name in `config/config.yaml`. You may also need to adjust `src/agent.py` if the new model requires a different API structure or prompt format.
 
 **Q: How can I add more documents?**
-**A:** Simply add the new PDF files to the `data/` directory and re-run the indexing script: `bash template.sh`. The script is configured to upsert data, so existing embeddings will be preserved.
+**A:** Simply add the new PDF files to the `data/` directory and re-run the indexing script: `python src/data_indexing.py`. The script is configured to upsert data, so existing embeddings will be updated.
 
 **Q: What does a "temperature" of 0 mean?**
-**A:** A temperature of 0 makes the LLM's output deterministic. It will always produce the most likely next word, which is ideal for a factual Q&A system to minimize creativity and randomness.
+**A:** A temperature of 0 makes the LLM's output deterministic. It will always produce the most likely next word, which is ideal for a factual Q&A system to minimize creativity and randomness. You can configure this in `config/config.yaml`.
 
 **Q: Can I change the chunk size?**
 **A:** Yes, the chunk size and overlap can be modified in the `config/config.yaml` file. After changing, you will need to re-run the indexing pipeline to update the documents in your vector store.

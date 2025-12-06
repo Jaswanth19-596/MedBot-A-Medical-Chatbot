@@ -56,9 +56,10 @@ jobs:
 
             docker run -d \
                 --name medbot_app \
-                -e PINECONE_API_KEY=${{ secrets.PINECONE_API_KEY }} \
-                -e OPENAI_API_KEY= ${{ secrets.OPENAI_API_KEY }} \
-                -e LANGCHAIN_TRACING_V2=${{ secrets.LANGCHAIN_TRACING_V2 }} \
-                -e LANGCHAIN_API_KEY=${{ secrets.LANGCHAIN_API_KEY }} \
+                -e PINECONE_API_KEY="${{ secrets.PINECONE_API_KEY }}" \
+                -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+                -e LANGCHAIN_TRACING_V2="${{ secrets.LANGCHAIN_TRACING_V2 }}" \
+                -e LANGCHAIN_API_KEY="${{ secrets.LANGCHAIN_API_KEY }}" \
                 -p 9999:8501 \
+                --restart unless-stopped \
                 740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest

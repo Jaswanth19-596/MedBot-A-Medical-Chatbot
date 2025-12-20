@@ -20,13 +20,13 @@ faithfulness        : 0.895 (89.5%)
 
 ### Metric Explanations
 
--   **Context Recall (86.9%):** This measures how well the retriever finds all the necessary information from the knowledge base to answer the question. Our score of 86.9% indicates that the system is highly effective at finding the relevant context.
+- **Context Recall (86.9%):** This measures how well the retriever finds all the necessary information from the knowledge base to answer the question. Our score of 86.9% indicates that the system is highly effective at finding the relevant context.
 
--   **Context Precision (87.7%):** This measures how much of the retrieved information is actually relevant to the question. At 87.7%, our system provides context that is highly focused and contains minimal irrelevant information.
+- **Context Precision (87.7%):** This measures how much of the retrieved information is actually relevant to the question. At 87.7%, our system provides context that is highly focused and contains minimal irrelevant information.
 
--   **Answer Relevancy (90.0%):** This measures how relevant the generated answer is to the user's question. A score of 90.0% shows that the chatbot's answers are consistently on-topic and directly address the user's query.
+- **Answer Relevancy (90.0%):** This measures how relevant the generated answer is to the user's question. A score of 90.0% shows that the chatbot's answers are consistently on-topic and directly address the user's query.
 
--   **Faithfulness (89.5%):** This measures how factually accurate the generated answer is based on the provided context. A high faithfulness score of 89.5% means the chatbot is not making up information (hallucinating) and is sticking to the facts from the retrieved documents.
+- **Faithfulness (89.5%):** This measures how factually accurate the generated answer is based on the provided context. A high faithfulness score of 89.5% means the chatbot is not making up information (hallucinating) and is sticking to the facts from the retrieved documents.
 
 ## Features
 
@@ -38,6 +38,8 @@ faithfulness        : 0.895 (89.5%)
 - **Relevance Filtering:** Ensures that the information used to answer questions is relevant to the user's query.
 - **Web & CLI Interfaces:** Interact with the chatbot through a Streamlit web app or a command-line interface.
 - **Rate Limiting:** The web interface has rate limiting to prevent abuse and manage costs.
+- **Docker Containerization:** Fully containerized application for consistent deployment across environments.
+- **CI/CD Pipeline:** Automated deployment to AWS using GitHub Actions with Docker image builds and ECR integration.
 
 ## How it Works
 
@@ -64,6 +66,8 @@ Follow these steps to set up and run the chatbot on your local machine. For a mo
 - Python 3.13.3
 - An API key from [OpenAI](https://openai.com/api/)
 - An API key from [Pinecone](https://www.pinecone.io/)
+- Docker (optional, for containerized deployment)
+- AWS account (optional, for cloud deployment)
 
 ### 1. Clone the Repository
 
@@ -75,6 +79,7 @@ cd MedBot-A-Medical-Chatbot
 ### 2. Install Dependencies
 
 It's recommended to use a virtual environment.
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
@@ -102,7 +107,7 @@ This script will read the PDFs from the `/data` folder, process them, and upload
 
 ## Usage
 
-You can interact with MedBot through the web interface or the command-line interface.
+You can interact with MedBot through the web interface, command-line interface, or Docker container.
 
 ### Web Interface
 
@@ -123,6 +128,32 @@ python src/data_retrieve.py
 ```
 
 The chatbot will be ready to answer your questions. To exit the chatbot, type `exit`.
+
+### Docker Deployment
+
+The application is fully containerized using Docker for consistent deployment across environments.
+
+#### Build and Run Locally
+
+```bash
+# Build the Docker image
+docker build -t medbot:latest .
+
+# Run the container
+docker run -p 8501:8501 --env-file .env medbot:latest
+```
+
+The application will be accessible at `http://localhost:8501`.
+
+## CI/CD Pipeline
+
+MedBot uses **GitHub Actions** for continuous integration and deployment to AWS:
+
+1. **Automated Builds:** On every push to the main branch, GitHub Actions automatically builds a new Docker image.
+2. **ECR Integration:** The Docker image is pushed to Amazon Elastic Container Registry (ECR) for secure storage and versioning.
+3. **AWS Deployment:** The application is automatically deployed to AWS infrastructure, ensuring the latest version is always available.
+
+The CI/CD workflow is defined in `.github/workflows/` and handles the entire deployment pipeline automatically.
 
 ## Evaluation
 
@@ -157,21 +188,27 @@ For a full list of dependencies, please see the `requirements.txt` file.
 Here are some visualizations of the evaluation metrics:
 
 ### Metrics Overview
+
 ![Metrics Overview](outputs/figures/metrics_overview.png)
 
 ### Performance Radar
+
 ![Performance Radar](outputs/figures/performance_radar.png)
 
 ### Score Distributions
+
 ![Score Distributions](outputs/figures/score_distributions.png)
 
 ### Metrics Correlation
+
 ![Metrics Correlation](outputs/figures/metrics_correlation.png)
 
 ### Metrics Distribution
+
 ![Metrics Distribution](outputs/figures/metrics_distribution.png)
 
 ### Performance Extremes
+
 ![Performance Extremes](outputs/figures/performance_extremes.png)
 
 ## License

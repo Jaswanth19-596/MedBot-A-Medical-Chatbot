@@ -12,9 +12,13 @@ from ragas.metrics import (
     answer_correctness
 )
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_cohere import CohereRerank
 from dotenv import load_dotenv
 from src.helpers import load_config
 from tqdm import tqdm
+
+
+
 
 # Load environment and config
 load_dotenv()
@@ -27,6 +31,16 @@ dimensions = config['embeddings']['dimensions']
 index_name = config['index_name']
 search_type = config['retrieval']['search_type']
 k = config['retrieval']['k']
+rerank_k = config['rerank']['k']
+
+
+if rerank_k > k:
+    raise ValueError(
+        f"rerank_k ({rerank_k}) cannot be greater than retrieval k ({k}). "
+        f"You can only rerank documents that were retrieved."
+    )
+
+
 
 print(f"Configuration loaded:")
 print(f"  Model: {model_name}")
@@ -94,19 +108,30 @@ answers = []
 print("Processing questions...")
 errors = 0
 
+reranker = CohereRerank(
+    model = 'rerank-english-v3.0',
+    top_n = rerank_k
+)
+
+
 for test_question in tqdm(test_questions, desc="Evaluating"):
     try:
         question = test_question['question']
         ground_truth = test_question['answer']
         
+        
+
         # Retrieve relevant documents
         relevant_docs = retriever.invoke(question)
-        context_list = [doc.page_content for doc in relevant_docs]
+
+        reranked_docs = reranker.compress_documents(relevant_docs, question)
+
+        context_list = [doc.page_content for doc in reranked_docs]
         
         # Format context for prompt
         context_text = "\n\n".join([
             f"Source: {doc.metadata.get('source', 'Unknown')}\n{doc.page_content}"
-            for doc in relevant_docs
+            for doc in reranked_docs
         ])
         
         # Generate answer

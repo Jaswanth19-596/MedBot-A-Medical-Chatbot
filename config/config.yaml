@@ -13,6 +13,9 @@ chunk:
 
 retrieval:
   search_type: 'similarity'
+  k: 10
+
+rerank:
   k: 3
 
 paths:

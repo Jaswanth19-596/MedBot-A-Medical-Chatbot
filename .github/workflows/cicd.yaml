@@ -49,12 +49,12 @@ jobs:
           key: ${{secrets.EC2_SSH_KEY}}
 
           script: |
-            aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 740186513331.dkr.ecr.us-east-2.amazonaws.com
-            docker pull 740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest
-            docker stop medbot_app || true
-            docker rm medbot_app || true
+            aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin 740186513331.dkr.ecr.us-east-2.amazonaws.com
+            sudo docker pull 740186513331.dkr.ecr.us-east-2.amazonaws.com/medbot/app:latest
+            sudo docker stop medbot_app || true
+            sudo docker rm medbot_app || true
 
-            docker run -d \
+            sudo docker run -d \
                 --name medbot_app \
                 -e PINECONE_API_KEY="${{ secrets.PINECONE_API_KEY }}" \
                 -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
